@@ -28,7 +28,7 @@ Key datasets for this case study
 - **pizza_toppings** : The table contains all of the topping_name values with their corresponding topping_id value
 
 ## Entity Relationship Diagram
-![alt text](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/ERD.jpg)
+![alt text](https://github.com/ms-vishwas/8-week-sql-challenge/blob/main/Case%20Study%20%232%20-%20Pizza%20Runner/ERD.jpg)
 
 ## Data Clean
 There are some known data issues with few tables. Data cleaning was performed and saved in temporary tables before attempting the case study.
@@ -44,11 +44,10 @@ There are some known data issues with few tables. Data cleaning was performed an
 - In the duration column, there are null values. The 'minutes', 'mins' 'minute' must be stripped
 - In the cancellation column, there are blank spaces and null values.
 
-Click [here](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/Data%20Clean.md) to view the data cleaning peformed.
+Click [here](https://github.com/ms-vishwas/8-week-sql-challenge/blob/main/Case%20Study%20%232%20-%20Pizza%20Runner/Data%20Cleaning.md) to view the data cleaning peformed.
 
 ## Case Study Solutions
-- [A. Pizza Metrics](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/A.%20Pizza%20metrics.md)
-- [B. Runner and Customer Experience](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/B.%20Runner%20and%20Customer%20Experience.md)
-- [C. Ingredient Optimisation](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/C.%20Ingredient%20Optimisation.md)
-- [D. Pricing and Ratings](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/D.%20Pricing%20and%20Ratings.md)
-- [E. Bonus Questions](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/E.%20Bonus%20Questions.md)
+- [A. Pizza Metrics](https://github.com/ms-vishwas/8-week-sql-challenge/blob/main/Case%20Study%20%232%20-%20Pizza%20Runner/A.%20Pizza%20Metrics.md)
+- [B. Runner and Customer Experience](https://github.com/ms-vishwas/8-week-sql-challenge/blob/main/Case%20Study%20%232%20-%20Pizza%20Runner/B.%20Runner%20and%20Customer%20Experience.md)
+- [C. Ingredient Optimisation](https://github.com/ms-vishwas/8-week-sql-challenge/blob/main/Case%20Study%20%232%20-%20Pizza%20Runner/C.%20Ingredient%20Optimisation.md)
+- [D. Pricing and Ratings](https://github.com/ms-vishwas/8-week-sql-challenge/blob/main/Case%20Study%20%232%20-%20Pizza%20Runner/D.%20Pricing%20and%20Ratings.md)
