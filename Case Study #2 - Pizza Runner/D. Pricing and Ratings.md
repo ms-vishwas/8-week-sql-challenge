@@ -20,7 +20,10 @@ with revenue_cte as (
 select concat('$ ',sum(revenue)) as total_revnue
 from revenue_cte;
 ```
-
+|total_revnue|
+|--------------|
+|$ 138|
+---
 ### 2.What if there was an additional $1 charge for any pizza extras? Add cheese is $1 extra
 ```sql
 --creating a view to split exclusions and extras
@@ -64,6 +67,9 @@ create view customer_order_view as
  select (SUM(pizza_price)+sum(extras_price)) as total_revenue
  from revenue_cte
 ```
+|total_revenue|
+|-------------|
+|142|
 ### 3.The Pizza Runner team now wants to add an additional ratings system that allows customers to rate their runner, how would you design an additional table for this new dataset - generate a schema for this new table and insert your own data for ratings for each successful customer order between 1 to 5.
 ```sql
 DROP TABLE IF EXISTS runner_rating;
@@ -85,6 +91,17 @@ VALUES ('1', '1', 'Really bad service'),
 SELECT *
 FROM runner_rating;
 ```
+| order_id | rating | review                                                     |
+|----------|--------|------------------------------------------------------------|
+| 1        | 1      | Really bad service                                         |
+| 2        | 1      | NULL                                                       |
+| 3        | 4      | Took too long...                                           |
+| 4        | 1      | Runner was lost, delivered it AFTER an hour. Pizza arrived cold |
+| 5        | 2      | Good service                                               |
+| 7        | 5      | It was great, good service and fast                        |
+| 8        | 2      | He tossed it on the doorstep, poor service                 |
+| 10       | 5      | Delicious!, he delivered it sooner than expected too!      |
+---
 ### 4.Using your newly generated table - can you join all of the information together to form a table which has the following information for successful deliveries?
 - customer_id
 - order_id
@@ -115,6 +132,17 @@ join ValidDeliveries vd on ag.order_id = vd.order_id
 left join runner_rating rr on vd.order_id = rr.order_id
 order by ag.order_id;
 ```
+| customer_id | order_id | runner_id | rating | order_time          | pickup_time         | pick_time | duration | avg_speed | tottal_pizzas |
+|-------------|----------|-----------|--------|---------------------|---------------------|-----------|----------|-----------|---------------|
+| 101         | 1        | 1         | 1      | 2020-01-01 18:05:02 | 2020-01-01 18:15:34 | 10        | 32       | 37.5      | 1             |
+| 101         | 2        | 1         | 1      | 2020-01-01 19:00:52 | 2020-01-01 19:10:54 | 10        | 27       | 44.44     | 1             |
+| 102         | 3        | 1         | 4      | 2020-01-02 23:51:23 | 2020-01-03 00:12:37 | 21        | 20       | 40.2      | 2             |
+| 103         | 4        | 2         | 1      | 2020-01-04 13:23:46 | 2020-01-04 13:53:03 | 30        | 40       | 35.1      | 3             |
+| 104         | 5        | 3         | 2      | 2020-01-08 21:00:29 | 2020-01-08 21:10:57 | 10        | 15       | 40        | 1             |
+| 105         | 7        | 2         | 5      | 2020-01-08 21:20:29 | 2020-01-08 21:30:45 | 10        | 25       | 60        | 1             |
+| 102         | 8        | 2         | 2      | 2020-01-09 23:54:33 | 2020-01-10 00:15:02 | 21        | 15       | 93.6      | 1             |
+| 104         | 10       | 1         | 5      | 2020-01-11 18:34:49 | 2020-01-11 18:50:20 | 16        | 10       | 60        | 2             |
+---
 ### 5.If a Meat Lovers pizza was $12 and Vegetarian $10 fixed prices with no cost for extras and each runner is paid $0.30 per kilometre traveled how much money does Pizza Runner have left over after these deliveries? Aggregate customer_orders per order_id
 ```sql
 with revenue_cte as (
@@ -132,3 +160,7 @@ with revenue_cte as (
 select sum(pizza_price) as gross_profit, sum(runner_cost) as runner_cost,sum(pizza_price)-sum(runner_cost) as net_profit
 from revenue_cte;
 ```
+|gross_profit|runner_cost|net_profit
+|------------|-----------|-----------|
+|138|64.62|73.38|
+---
