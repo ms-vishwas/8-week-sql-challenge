@@ -2,13 +2,13 @@
 -- CASE STUDY #1: DANNY'S DINER --
 ----------------------------------
 
--- Author: Manaswi Kamila
--- Date: 18/04/2022 
+-- Author: Vishwas M S
+-- Date: 18/04/2025 
 -- Tool used: MySQL Server
 
 
  
-CREATE SCHEMA dannys_diner;
+CREATE DATABASE dannys_diner;
 use  dannys_diner;
 
 CREATE TABLE sales (
