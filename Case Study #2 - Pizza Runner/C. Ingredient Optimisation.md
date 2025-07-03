@@ -11,6 +11,11 @@ join pizza_recipes_2 pr on pn.pizza_id = pr.pizza_id
 join pizza_toppings pt on pr.toppings = pt.topping_id
 group by pn.pizza_name;
 ```
+| pizza_name | standard_ingredients |
+|------------|----------------------|
+| Meatlovers | Bacon,BBQ Sauce,Beef,Cheese,Chicken,Mushrooms,Pepperoni,Salami |
+| Vegetarian | Cheese,Mushrooms,Onions,Peppers,Tomatoes,Tomato Sauce |
+---
 ### 2.What was the most commonly added extra?
 ```sql
 with extras_cte as(
@@ -24,6 +29,10 @@ join pizza_toppings pt on e.extras = pt.topping_id
 group by pt.topping_name
 order by extras_count desc;
 ```
+| topping_name | extras_count |
+|--------------|--------------|
+| Bacon        | 4            |
+---
 ### 3.What was the most common exclusion?
 ```sql
 with exclusion_cte as(
@@ -37,6 +46,10 @@ join pizza_toppings pt on e.exclusions = pt.topping_id
 group by pt.topping_name
 order by exclusion_count desc;
 ```
+|topping_name|exclusion_count|
+|--------|-----------------|
+|Cheese|4|
+---
 ### 4.Generate an order item for each record in the customers_orders table in the format of one of the following:
 - Meat Lovers
 - Meat Lovers - Exclude Beef
@@ -44,11 +57,11 @@ order by exclusion_count desc;
 - Meat Lovers - Exclude Cheese, Bacon - Extra Mushroom, Peppers
 ```sql
 with order_details_cte as (
-	select c.order_id,p.pizza_name,c.exclusions,c.extras
+	select c.order_id,p.pizza_name,c.exclusions,c.extras,c.customer_id
 	from customer_orders c
 	join pizza_names p on c.pizza_id = p.pizza_id
 )
-select order_id,pizza_name+
+select order_id,customer_id,pizza_name+
 	case 
 		when od.exclusions is not null and od.exclusions <> '' and od.exclusions not in ('null','NULL') then
 		' - exclude '+( select STRING_AGG(pt.topping_name,',') from string_split(od.exclusions,',') s 
@@ -60,10 +73,27 @@ select order_id,pizza_name+
 		' - include '+(select STRING_AGG(pt.topping_name,',') from string_split(od.extras,',') s
 						join pizza_toppings pt on cast(s.value as int) = pt.topping_id)
 		else ''
-	end as temp
+	end as order_item
 from order_details_cte od 
 order by order_id;
 ```
+| order_id | customer_id | order_item                                      |
+|----------|-------------|-------------------------------------------------|
+| 1        | 101         | Meatlovers                                      |
+| 2        | 101         | Meatlovers                                      |
+| 3        | 102         | Meatlovers                                      |
+| 3        | 102         | Vegetarian                                      |
+| 4        | 103         | Meatlovers - exclude Cheese                     |
+| 4        | 103         | Meatlovers - exclude Cheese                     |
+| 4        | 103         | Vegetarian - exclude Cheese                     |
+| 5        | 104         | Meatlovers - include Bacon                      |
+| 6        | 101         | Vegetarian                                      |
+| 7        | 105         | Vegetarian - include Bacon                      |
+| 8        | 102         | Meatlovers                                      |
+| 9        | 103         | Meatlovers - exclude Cheese - include Bacon,Chicken |
+| 10       | 104         | Meatlovers                                      |
+| 10       | 104         | Meatlovers - exclude BBQ Sauce,Mushrooms - include Bacon,Cheese |
+---
 ### 5.Generate an alphabetically ordered comma separated ingredient list for each pizza order from the customer_orders table and add a 2x in front of any relevant ingredients
 -For example: "Meat Lovers: 2xBacon, Beef, ... , Salami"
 ```sql
@@ -118,6 +148,23 @@ CROSS APPLY (
 ) Ingredients
 ORDER BY oc.order_id;
 ```
+| order_id | ingredient_list                                                  |
+|----------|------------------------------------------------------------------|
+| 1        | Meatlovers: Bacon, BBQ Sauce, Beef, Cheese, Chicken, Mushrooms, Pepperoni, Salami |
+| 2        | Meatlovers: Bacon, BBQ Sauce, Beef, Cheese, Chicken, Mushrooms, Pepperoni, Salami |
+| 3        | Meatlovers: Bacon, BBQ Sauce, Beef, Cheese, Chicken, Mushrooms, Pepperoni, Salami |
+| 3        | Vegetarian: Cheese, Mushrooms, Onions, Peppers, Tomato Sauce, Tomatoes |
+| 4        | Meatlovers: Bacon, BBQ Sauce, Beef, Chicken, Mushrooms, Pepperoni, Salami |
+| 4        | Meatlovers: Bacon, BBQ Sauce, Beef, Chicken, Mushrooms, Pepperoni, Salami |
+| 4        | Vegetarian: Mushrooms, Onions, Peppers, Tomato Sauce, Tomatoes |
+| 5        | Meatlovers: 2xBacon, BBQ Sauce, Beef, Cheese, Chicken, Mushrooms, Pepperoni, Salami |
+| 6        | Vegetarian: Cheese, Mushrooms, Onions, Peppers, Tomato Sauce, Tomatoes |
+| 7        | Vegetarian: 2xBacon, Cheese, Mushrooms, Onions, Peppers, Tomato Sauce, Tomatoes |
+| 8        | Meatlovers: Bacon, BBQ Sauce, Beef, Cheese, Chicken, Mushrooms, Pepperoni, Salami |
+| 9        | Meatlovers: 2xBacon, BBQ Sauce, Beef, 2xChicken, Mushrooms, Pepperoni, Salami |
+| 10       | Meatlovers: Bacon, BBQ Sauce, Beef, Cheese, Chicken, Mushrooms, Pepperoni, Salami |
+| 10       | Meatlovers: 2xBacon, Beef, 2xCheese, Chicken, Pepperoni, Salami |
+---
 ### 6.What is the total quantity of each ingredient used in all delivered pizzas sorted by most frequent first?
 ```sql
 WITH DeliveredOrders AS (
@@ -172,3 +219,18 @@ JOIN pizza_toppings pt ON at.topping_id = pt.topping_id
 GROUP BY pt.topping_name
 ORDER BY total_quantity DESC;
 ```
+| topping_name | total_quantity |
+|--------------|----------------|
+| Bacon        | 15             |
+| Cheese       | 11             |
+| Mushrooms    | 11             |
+| Pepperoni    | 9              |
+| Chicken      | 9              |
+| Salami       | 9              |
+| Beef         | 9              |
+| BBQ Sauce    | 8              |
+| Peppers      | 3              |
+| Onions       | 3              |
+| Tomato Sauce | 3              |
+| Tomatoes     | 3              |
+---
