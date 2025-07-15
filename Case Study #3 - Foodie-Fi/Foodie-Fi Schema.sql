@@ -1,6 +1,6 @@
-DROP SCHEMA foodie_fi;
+DROP DATABASE foodie_fi;
 
-CREATE SCHEMA foodie_fi;
+CREATE DATABASE foodie_fi;
 USE foodie_fi;
 
 CREATE TABLE plans (
